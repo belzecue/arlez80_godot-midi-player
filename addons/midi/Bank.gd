@@ -1,9 +1,11 @@
 """
-	Sound Bank by Yui Kinomoto @arlez80
+	Sound Bank by あるる（きのもと 結衣） @arlez80
+
+	MIT License
 """
+#extends Resource
 
 const drum_track_bank:int = 128
-const SoundFont = preload( "SoundFont.gd" )
 
 class_name Bank
 
@@ -17,21 +19,20 @@ class Instrument:
 	var vel_range_min:int = 0
 	var vel_range_max:int = 127
 	var preset:Preset
-	# var assine_group = 0	# reserved
+	# var assine_group:int = 0	# reserved
 
-	"""
-	func _init( ):
-		self.ads_state = [
-			VolumeState.new( 0.0, 0.0 ),
-			VolumeState.new( 0.2, -144.0 )
-		]
-		self.release_state = [
-			VolumeState.new( 0.0, 0.0 ),
-			VolumeState.new( 0.01, -144.0 )
-		]
-	"""
+	# 遅くなるので初期設定を削除
+	#func _init( ):
+	#	self.ads_state = [
+	#		VolumeState.new( 0.0, 0.0 ),
+	#		VolumeState.new( 0.2, -144.0 )
+	#	]
+	#	self.release_state = [
+	#		VolumeState.new( 0.0, 0.0 ),
+	#		VolumeState.new( 0.01, -144.0 )
+	#	]
 
-# VolumeState
+# 音量
 class VolumeState:
 	var time:float = 0.0
 	var volume_db:float = 0.0
@@ -40,7 +41,7 @@ class VolumeState:
 		self.time = _time
 		self.volume_db = _volume_db
 
-# Preset
+# プリセット
 class Preset:
 	var name:String = ""
 	var number:int = 0
@@ -60,10 +61,12 @@ class TempSoundFontBag:
 	var instrument:TempSoundFontInstrument
 	var pan:float = 0.5
 
+# SoundFont解析用
 class TempSoundFontInstrument:
 	var name:String = ""
 	var bags:Array = Array( )	# TempSoundFontBag[]
 
+# SoundFont解析用
 class TempSoundFontRange:
 	var low:int
 	var high:int
@@ -79,6 +82,7 @@ class TempSoundFontRange:
 
 		return new
 
+# SoundFont解析用
 class TempSoundFontInstrumentBag:
 	var sample:SoundFont.SoundFontSampleHeader
 	var sample_id:int = -1
@@ -115,6 +119,7 @@ class TempSoundFontInstrumentBag:
 
 		return new
 
+# SoundFont解析用
 class TempSoundFontInstrumentBagADSR:
 	var attack_vol_env_time:float = 0.001	# sec
 	var decay_vol_env_time:float = 0.001	# sec
@@ -131,16 +136,20 @@ class TempSoundFontInstrumentBagADSR:
 		return new
 
 # 音色テーブル
-var presets:Dictionary = Dictionary( )
+export(Dictionary) var presets:Dictionary = Dictionary( )
 # 頭の無音
 const head_silent_samples:int = 44100 / 8
 const head_silent_second:float = 1.0 / 8.0
 var head_silent:PoolByteArray = PoolByteArray([])
 
-"""
-	追加
-"""
 func set_preset_sample( program_number:int, base_sample:int, base_key:int ) -> void:
+	#
+	# プリセットに波形を追加する
+	# @param	program_number	プログラム番号
+	# @param	base_sample		基準のサンプリング周波数
+	# @param	base_key		基準のキー番号
+	#
+
 	var preset:Preset = Preset.new( )
 	preset.name = "#%03d" % program_number
 	preset.number = program_number
@@ -153,16 +162,22 @@ func set_preset_sample( program_number:int, base_sample:int, base_key:int ) -> v
 
 	self.set_preset( program_number, preset )
 
-"""
-	追加
-"""
 func set_preset( program_number:int, preset:Preset ) -> void:
+	#
+	# プリセットを追加する
+	# @param	program_number	プログラム番号
+	# @param	preset			プリセットデータ
+	#
+
 	self.presets[program_number] = preset
 
-"""
-	指定した楽器を取得
-"""
 func get_preset( program_number:int, bank:int = 0 ) -> Preset:
+	#
+	# 指定した楽器を取得
+	# @param	program_number	プログラム番号
+	# @param	bank			バンク番号
+	#
+
 	var pc:int = program_number | ( bank << 7 )
 
 	# 存在しない場合
@@ -181,10 +196,13 @@ func get_preset( program_number:int, bank:int = 0 ) -> Preset:
 
 	return self.presets[pc]
 
-"""
-	サウンドフォント読み込み
-"""
 func read_soundfont( sf:SoundFont.SoundFontData, need_program_numbers:Array = [] ) -> void:
+	#
+	# サウンドフォント読み込み
+	# @param	sf:	サウンドフォントデータ
+	# @param	needs_program_numbers		指定した番号のプログラム番号のみ読み込む
+	#
+
 	var sf_insts:Array = self._read_soundfont_pdta_inst( sf )
 
 	if self.head_silent.size( ) == 0:
@@ -247,6 +265,12 @@ func read_soundfont( sf:SoundFont.SoundFontData, need_program_numbers:Array = []
 	#printt( "all", times[-1] - times[0] )
 
 func _read_soundfont_pdta_inst( sf:SoundFont.SoundFontData ) -> Array:
+	#
+	# サウンドフォントからプリセットデータを読み込む
+	# @param	sf	サウンドフォントデータ
+	# @return	プリセットデータ
+	#
+
 	var sf_insts:Array = Array( )
 	var bag_index:int = 0
 	var gen_index:int = 0
@@ -330,6 +354,13 @@ func _read_soundfont_pdta_inst( sf:SoundFont.SoundFontData ) -> Array:
 	return sf_insts
 
 func _read_soundfont_preset_compose_sample( sf:SoundFont.SoundFontData, preset:Preset ) -> void:
+	#
+	# サウンドフォントから波形を取り出してプリセットに追加する
+	# @warning この関数は「長大関数」化しているが、GDScriptのメンバ関数呼び出しが遅いためすべてインライン展開したのが原因。いずれ、Godot EngineのVMが高速化したら関数を分割する予定。
+	# @param	sf		サウンドフォントデータ
+	# @param	preset	プリセット
+	#
+
 	var sample_base:PoolByteArray = sf.sdta.smpl
 	var loaded_sample_data:Dictionary = Dictionary( )
 	var log2:float = log( 2.0 )
@@ -437,6 +468,11 @@ func _read_soundfont_preset_compose_sample( sf:SoundFont.SoundFontData, preset:P
 				instrument.vel_range_max = vel_range_max
 
 func _notification( what:int ):
+	#
+	# 通知（メモリ破棄用）
+	# @param	what	通知要因
+	#
+
 	if what == NOTIFICATION_PREDELETE:
 		for i in self.presets.keys( ):
 			var preset:Preset = self.presets[i]

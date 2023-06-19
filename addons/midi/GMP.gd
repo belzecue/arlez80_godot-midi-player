@@ -1,5 +1,7 @@
 """
-	Godot MIDI Player Plugin by arlez80 (Yui Kinomoto)
+	Godot MIDI Player Plugin by あるる（きのもと 結衣） @arlez80
+
+	MIT License
 """
 
 tool
@@ -8,18 +10,21 @@ extends EditorPlugin
 #var sf2_import_plugin
 
 func _enter_tree( ):
-	self.add_custom_type( "GodotMIDIPlayer", "Node", preload("MidiPlayer.gd"), preload("icon.png") )
+	pass
+	#self.add_custom_type( "GodotMIDIPlayer", "Node", preload("MidiPlayer.gd"), preload("icon.png") )
 
-	#self.sf2_import_plugin = preload("import/SF2Import.gd").new( )
+	#self.sf2_import_plugin = preload("SoundFontImporter.gd").new( )
 	#self.add_import_plugin( self.sf2_import_plugin )
 
 func _exit_tree( ):
-	self.remove_custom_type( "GodotMIDIPlayer" )
+	pass
+	#self.remove_custom_type( "GodotMIDIPlayer" )
+
 	#self.remove_import_plugin( self.sf2_import_plugin )
 	#self.sf2_import_plugin = null
 
 func has_main_screen():
-	return true
+	return false
 
 func make_visible( visible:bool ):
 	pass
