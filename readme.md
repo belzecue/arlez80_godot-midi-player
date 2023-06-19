@@ -1,11 +1,13 @@
 # Godot MIDI Player
 
-Software MIDI player library for Godot Engine 3.2 later
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/E1E44AWTA)
+
+Software MIDI player library for Godot Engine 3.4 and 3.5 later
 
 * Changes play speed.
 * Set tempo.
 * Emit on some events (tempo change, appears lyric ...)
-* Can ontrol like AudioStreamPlayer.
+* You can control like AudioStreamPlayer.
 
 ## Try it
 
@@ -13,7 +15,7 @@ Software MIDI player library for Godot Engine 3.2 later
 2. Copy *.sf2 under "res://"
 3. Set MIDI path to MidiPlayer "file" parameter.
 4. Set SoundFont path to MidiPlayer "soundfont" parameter.
-5. Play
+5. call play() method
 
 ## How to use
 
@@ -24,6 +26,9 @@ Software MIDI player library for Godot Engine 3.2 later
 * [download](https://bitbucket.org/arlez80/godot-midi-player/downloads/demo.zip)
     * This demo can get MIDIInput events. You can play using MIDI keyboards!
 * BGM "failyland_gm.mid" from [IvyMaze]( http://ivymaze.sakura.ne.jp/ )
+* Youtube: [Demo #1](https://www.youtube.com/watch?v=SdrU4uRepVs)
+* Youtube: [Demo #2](https://www.youtube.com/watch?v=nn21P3eI4hs)
+* Youtube: [Demo #3](https://www.youtube.com/watch?v=dAYfFH-Fq2o)
 
 ## Hint
 
